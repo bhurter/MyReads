@@ -34,13 +34,5 @@ Create a bookshelf app that allows the user to:
 - Click on the down arrow on any book to open a menu from which you can change the shelf the book is on
 - Click on the plus icon on the bottom right of the window to search for and add new books to your bookcase
 
-## Components
-### AddBook.js
-### App.cs
-### Book.js
-### BookCase.js
-### BooksAPI.js
-### ShelfPicker.js
-
 ## Acknowledgments
 - BooksAPI.js provided by [Udacity Front End Web Developer Nanodegree] (https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001)
