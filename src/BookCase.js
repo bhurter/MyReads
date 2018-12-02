@@ -2,7 +2,14 @@
 *
 * BookCase manages the MyReads Bookcase.
 *
-* Input:  Shelves - the shelves to display in the bookcase.
+* Props:
+*   Shelves     the shelves to display in the bookcase.
+*
+* State:
+*   books       the array of book objects that are placed on the Shelves
+*
+* Output:
+*   Properly rendered html for the bookcase / main page
 *****************************************************************************/
 
 import React, { Component } from 'react';

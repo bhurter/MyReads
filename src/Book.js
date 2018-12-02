@@ -1,14 +1,12 @@
 /******************************************************************************
  *  The Book component manages the individual book on the shelf
  *
- *  Input:
+ *  Props:
  *    book          Object    Represents a single book from the books array
  *    updateBook    Function  The function that manages updating book details
  *
  *  Output:
- *    properly rendered html
- *
- *  Future Enhancements:
+ *    properly rendered html for the book object
  *
  *****************************************************************************/
 

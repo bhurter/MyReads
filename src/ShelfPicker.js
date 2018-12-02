@@ -2,12 +2,12 @@
  *  The ShelfPicker component manages the action trigger to allow the user to
  *  select which shelf the book belongs to
  *
- *  Input:
+ *  Props:
  *    book          Object    Represents a single book from the books array
  *    updateBook    Function  The function that manages updating book details
  *
  *  Output:
- *    properly rendered html
+ *    properly rendered html for the shelf-picker
  *
  *  Future Enhancements:
  *

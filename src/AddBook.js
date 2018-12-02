@@ -1,3 +1,18 @@
+/******************************************************************************
+ *  The AddBook component manages the search functionality and allows the
+ *  user to add new books to their bookcase using the ShelfPicker component.
+ *
+ *  Props:
+ *    none
+ *
+ *  State:
+ *    newBooks        the array of book objects returned from the search
+ *    searchQuery     contains the user-input search criteria
+ *
+ *  Output:
+ *    properly rendered html
+ *
+ *****************************************************************************/
 import React, {Component} from 'react';
 import {search, update} from './BooksAPI';
 import { Link } from 'react-router-dom';
