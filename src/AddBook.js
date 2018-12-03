@@ -54,10 +54,13 @@ class AddBook extends Component {
     searchQuery ?
       search(searchQuery).then((newBooks) =>
       {
-        newBooks.sort(sortBy('title', 'authors'));
-        newBooks.length ? this.setState({newBooks}) : this.setState({newBooks: []});
-      }) :
-      this.setState({ newBooks: []
+        if (newBooks.length >= 0) {
+          newBooks.sort(sortBy('title', 'authors'));
+          this.setState({newBooks});
+        } else {
+          this.setState({newBooks: []});
+        }
+      }) :  this.setState({ newBooks: []
       });
 
   }
