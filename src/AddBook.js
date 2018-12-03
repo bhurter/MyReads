@@ -6,7 +6,8 @@
  *    none
  *
  *  State:
- *    newBooks        the array of book objects returned from the search
+ *    myBooks         array of book objects currently in My Reads bookcase
+ *    newBooks        array of book objects returned from the search
  *    searchQuery     contains the user-input search criteria
  *
  *  Output:
@@ -14,7 +15,7 @@
  *
  *****************************************************************************/
 import React, {Component} from 'react';
-import {search, update} from './BooksAPI';
+import {search, update, getAll} from './BooksAPI';
 import { Link } from 'react-router-dom';
 import Book from './Book';
 import sortBy from 'sort-by';
@@ -22,13 +23,33 @@ import sortBy from 'sort-by';
 class AddBook extends Component {
 
   state = {
+    myBooks: [],
     newBooks: [],
     searchQuery: '',
   }
 
+  componentDidMount() {
+
+    // retrieve all of my books using getAll from BooksAPI, then set the state for the books
+    // will use this to set shelf if search returns books that are already in the bookcase
+    getAll().then((myBooks) => {
+      this.setState({ myBooks });
+    });
+  }
+
+  /*===========================================================================
+    = UpdateQuery processes the user input and manages the search
+    ==========================================================================*/
+
   updateQuery = (searchQuery) => {
 
     this.setState({searchQuery});
+
+    /*
+      If search query is not empty, search for books.
+      If search returns data, then update state of newBooks.
+      If search does not return any data OR if query is empty, then set newBooks to empty array
+    */
 
     searchQuery ?
       search(searchQuery).then((newBooks) =>
@@ -41,10 +62,21 @@ class AddBook extends Component {
 
   }
 
-  updateBook = (id, shelf) => {
+  /*===========================================================================
+   = updateBookShelf processes the user selection of the bookshelf and updates
+   = the books database to persist the shelf
+   ==========================================================================*/
+
+  updateBookShelf = (id, shelf) => {
 
     let books = this.state.newBooks;
+
+    // find the index of the book whose shelf changed
+
     let bookIndex = books.findIndex(book => book.id === id);
+
+    // update the Shelf in the object and set the state
+
     books[bookIndex].shelf = shelf;
     update(books[bookIndex], shelf);
     this.setState({
@@ -52,20 +84,29 @@ class AddBook extends Component {
     });
   }
 
+  /*===========================================================================
+   = onShelf checks to see if a book is already on a shelf in the bookcase and
+   = sets the shelf appropriately
+   ==========================================================================*/
+  onShelf = (book) => {
+    let myBooks = this.state.myBooks;
+
+    // check to see if this book is already in the BookCase
+
+    let bookIndex = myBooks.findIndex (myBook => myBook.id === book.id);
+
+    // if it is on the bookcase, get the shelf.  Else, set shelf to 'none'
+
+    bookIndex >= 0 ? book.shelf = myBooks[bookIndex].shelf : book.shelf = 'none';
+
+    return book;
+  }
   render() {
     return (
       <div className = "search-books" >
         <div className = "search-books-bar" >
           <Link className = "close-search" to = "/" > Close < /Link>
           <div className = "search-books-input-wrapper" >
-            {
-            /*  NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                You can find these search terms here:
-                https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-                However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                you don't find a specific author or title. Every search is limited by search terms.*/
-            }
             < input
               type = "text"
               placeholder = "Search by title or author"
@@ -79,12 +120,15 @@ class AddBook extends Component {
         { /* only display if there are results */ }
         { this.state.newBooks.length !== 0 && (
           <div className = "search-books-results" >
-            <ol className = "books-grid" > {
-              this.state.newBooks
-                .map(book => ( <Book key = {book.id}
-                  book = {book}
-                  updateBook = {this.updateBook}/>))
-            }
+            <ol className = "books-grid">
+              {
+                this.state.newBooks
+                  .map(book => (
+                    <Book key = {book.id}
+                      book = {this.onShelf(book)}
+                      updateBook = {this.updateBookShelf}
+                    />))
+              }
             </ol>
           </div>
         )}
