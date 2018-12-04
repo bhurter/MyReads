@@ -14,9 +14,9 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Book from './Book';
-import {getAll, update} from './BooksAPI';
 import sortBy from 'sort-by';
+import {getAll} from './BooksAPI';
+import Book from './Book';
 
 class BookCase extends Component {
 
@@ -24,60 +24,22 @@ class BookCase extends Component {
 
   static propTypes = {
     shelves: PropTypes.array.isRequired,
+    myBooks: PropTypes.array.isRequired,
+    updateBookShelf: PropTypes.func.isRequired
   }
-
-  state = {
-    books: []
-  };
-
 
   componentDidMount() {
 
     // retrieve all of my books using getAll from BooksAPI, then set the state for the books
-    getAll().then((books) => {
-      books.sort(sortBy('title', 'authors'));
-      this.setState({ books });
+    getAll().then((myBooks) => {
+      if (myBooks.length >= 0) {
+        myBooks.sort(sortBy('title', 'authors'));
+        this.setState({myBooks: myBooks});
+      } else {
+        this.setState({myBooks: []});
+      }
     });
   }
-
-
-  /*************************************************************************
-   * updateBook changes the shelf of a book in the bookcase.  It updates the
-   * book in the database using update from BooksAPI, and also updates the
-   * shelf in the books object array
-   *
-   * Inputs:
-   *    id - the book id that is being moved
-   *    shelf - the shelf the book is being moved to
-   *
-   * Steps:
-   *  1. Find the index of the book that was moved
-   *  2. Update the shelf locally
-   *  3. Update the books database using update from BooksAPI
-   *  4. Update the state
-   *
-   *************************************************************************/
-
-  updateBook = (id, shelf) => {
-
-    let books = this.state.books;
-
-    /* Locate the current book index in the books object array */
-
-    let bookIndex = books.findIndex (book => book.id === id);
-
-    /* Update the shelf */
-
-    books[bookIndex].shelf = shelf;
-
-    /* Update the books database useing the update function from BooksAPI */
-    update (books[bookIndex], shelf);
-
-    /* Call setState to update books */
-
-    this.setState({ books });
-  }
-
   /*  To set the view, first filter by shelf, then map each book to the
       Book component */
 
@@ -93,7 +55,7 @@ class BookCase extends Component {
           <div key={shelf.name}>
             <h2  className="bookshelf-title" > {shelf.name} </h2>
             <ol className="books-grid">
-              {this.state.books
+              {this.props.myBooks
 
               /* filter the books for the current bookshelf */
 
@@ -103,8 +65,10 @@ class BookCase extends Component {
 
                 .map(book => (
                   <Book key={book.id}
+                    shelves={this.props.shelves}
                     book={book}
-                    updateBook={this.updateBook}
+                    myBooks={this.props.myBooks}
+                    updateBookShelf = {this.props.updateBookShelf}
                   />
                 ))}
             </ol>

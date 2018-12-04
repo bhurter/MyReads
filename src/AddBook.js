@@ -15,27 +15,25 @@
  *
  *****************************************************************************/
 import React, {Component} from 'react';
-import {search, update, getAll} from './BooksAPI';
 import { Link } from 'react-router-dom';
-import Book from './Book';
+import PropTypes from 'prop-types';
 import sortBy from 'sort-by';
+import Book from './Book';
+import {search} from './BooksAPI';
 
 class AddBook extends Component {
 
   state = {
-    myBooks: [],
     newBooks: [],
     searchQuery: '',
   }
 
-  componentDidMount() {
-
-    // retrieve all of my books using getAll from BooksAPI, then set the state for the books
-    // will use this to set shelf if search returns books that are already in the bookcase
-    getAll().then((myBooks) => {
-      this.setState({ myBooks });
-    });
+  static propTypes = {
+    shelves: PropTypes.array.isRequired,
+    myBooks: PropTypes.array.isRequired,
+    updateBookShelf: PropTypes.func.isRequired
   }
+
 
   /*===========================================================================
     = UpdateQuery processes the user input and manages the search
@@ -66,33 +64,11 @@ class AddBook extends Component {
   }
 
   /*===========================================================================
-   = updateBookShelf processes the user selection of the bookshelf and updates
-   = the books database to persist the shelf
-   ==========================================================================*/
-
-  updateBookShelf = (id, shelf) => {
-
-    let books = this.state.newBooks;
-
-    // find the index of the book whose shelf changed
-
-    let bookIndex = books.findIndex(book => book.id === id);
-
-    // update the Shelf in the object and set the state
-
-    books[bookIndex].shelf = shelf;
-    update(books[bookIndex], shelf);
-    this.setState({
-      books
-    });
-  }
-
-  /*===========================================================================
    = onShelf checks to see if a book is already on a shelf in the bookcase and
    = sets the shelf appropriately
    ==========================================================================*/
   onShelf = (book) => {
-    let myBooks = this.state.myBooks;
+    let myBooks = this.props.myBooks;
 
     // check to see if this book is already in the BookCase
 
@@ -104,6 +80,7 @@ class AddBook extends Component {
 
     return book;
   }
+
   render() {
     return (
       <div className = "search-books" >
@@ -128,8 +105,10 @@ class AddBook extends Component {
                 this.state.newBooks
                   .map(book => (
                     <Book key = {book.id}
+                      shelves = {this.props.shelves}
                       book = {this.onShelf(book)}
-                      updateBook = {this.updateBookShelf}
+                      myBooks = {this.props.myBooks}
+                      updateBookShelf = {this.props.updateBookShelf}
                     />))
               }
             </ol>

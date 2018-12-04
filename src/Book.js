@@ -17,9 +17,12 @@ import ShelfPicker from './ShelfPicker';
 
 class Book extends Component {
   static propTypes = {
+    shelves: PropTypes.array.isRequired,
     book: PropTypes.object.isRequired,
-    updateBook: PropTypes.func.isRequired,
+    myBooks: PropTypes.array.isRequired,
+    updateBookShelf: PropTypes.func.isRequired
   }
+
 
   /****************************************************************************
    *  setAuthors transforms the authors array from the book object into a
@@ -56,8 +59,11 @@ class Book extends Component {
             { /* Render the shelf picker for this book */}
 
             <ShelfPicker
+              shelves = {this.props.shelves}
               book = {this.props.book}
-              updateBook = {this.props.updateBook} />
+              myBooks = {this.props.myBooks}
+              updateBookShelf = {this.props.updateBookShelf}
+            />
           </div>
           <div className="book-title">{this.props.book.title}</div>
           <div className="book-authors">{bookAuthors}</div>
