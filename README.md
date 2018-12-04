@@ -14,13 +14,13 @@ Create a bookshelf app that allows the user to:
     5.  Remove books from the bookcase
 
 ## Future Enhancements:
-    1.  Refactor ShelfPicker so that it accepts state rather than being hard-coded
+    1.  Refactor ShelfPicker so that it accepts state rather than being hard-coded (DONE)
     2.  Add use case for when there are no books in the entire BookCase
     3.  Add message on AddBook page when the search returns zero results
     4.  Add message on AddBook page to indicate the number of books found
     5.  Add spinner while bookcase is loading
     6.  Add spinner while search is loading results
-    7.  Optimize search engine - consider not searching until 2-3 characters have been added to the search query
+    7.  Optimize search engine - consider not searching until the user stops typing
 
 ## Getting Started
     1.  Clone the repository or download the files
